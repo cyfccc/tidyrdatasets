@@ -1,0 +1,24 @@
+---
+title: "20160225-Class"
+output: html_document
+---
+
+
+```{r problem_1, echo = TRUE, warning = FALSE, message = FALSE}
+library(nycflights13)
+library(dplyr)
+library(stringr)
+library(ggplot2)
+
+# Plane that spends more time in the air than it should  
+  flight.stats<- flights %>%
+    mutate(ratio = air_time / distance) %>%
+    select(tailnum, ratio) %>%
+    na.omit() %>%
+    group_by(tailnum) %>%
+    summarize(mean.ratio = mean(ratio)) %>%
+    ungroup() %>%
+    mutate(centered.mean = mean.ratio - mean(mean.ratio)) %>%
+    arrange(centered.mean)
+  ggplot(flight.stats, aes(centered.mean)) + geom_histogram()
+```
